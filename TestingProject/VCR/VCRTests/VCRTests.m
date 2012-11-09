@@ -8,13 +8,14 @@
 
 #import "VCRTests.h"
 #import "Request.h"
+#import "SpecName.h"
 
 @implementation VCRTests
 
 - (void)setUp
 {
     [super setUp];
-    
+    [SpecName sharedInstance].specName = [[self class] description];
     // Set-up code here.
 }
 
@@ -30,7 +31,7 @@
     Request *request = [[Request alloc] init];
     [request callRequest];
     [self waitForCompletion:5];
-    NSLog([[NSString alloc] initWithData:[request response] encoding:NSUTF8StringEncoding]);
+//    NSLog([[NSString alloc] initWithData:[request response] encoding:NSUTF8StringEncoding]);
     STAssertNotNil([request response], @"response is nill");
 }
 

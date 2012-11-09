@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		328EBF0A164CBF8C00B8FC06 /* SpecName.m in Sources */ = {isa = PBXBuildFile; fileRef = 328EBF09164CBF8C00B8FC06 /* SpecName.m */; };
 		32988E85164493E10044A439 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32988E84164493E10044A439 /* UIKit.framework */; };
 		32988E87164493E10044A439 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32988E86164493E10044A439 /* Foundation.framework */; };
 		32988E89164493E10044A439 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32988E88164493E10044A439 /* CoreGraphics.framework */; };
@@ -24,9 +25,9 @@
 		32988EB3164493E20044A439 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32988EB1164493E20044A439 /* InfoPlist.strings */; };
 		32988EB6164493E20044A439 /* VCRTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988EB5164493E20044A439 /* VCRTests.m */; };
 		32988EC1164494890044A439 /* SMWebRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988EC0164494890044A439 /* SMWebRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		32988EC2164494890044A439 /* SMWebRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988EC0164494890044A439 /* SMWebRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		32988ECC164498970044A439 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988ECB164498970044A439 /* Request.m */; };
 		32988ECD164498970044A439 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988ECB164498970044A439 /* Request.m */; };
+		32988ED11645B57E0044A439 /* SMWebRequest+VCR.m in Sources */ = {isa = PBXBuildFile; fileRef = 32988ED01645B57E0044A439 /* SMWebRequest+VCR.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		328EBF08164CBF8C00B8FC06 /* SpecName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecName.h; sourceTree = "<group>"; };
+		328EBF09164CBF8C00B8FC06 /* SpecName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecName.m; sourceTree = "<group>"; };
 		32988E80164493E10044A439 /* VCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32988E84164493E10044A439 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		32988E86164493E10044A439 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -66,6 +69,8 @@
 		32988EC0164494890044A439 /* SMWebRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMWebRequest.m; sourceTree = "<group>"; };
 		32988ECA164498970044A439 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
 		32988ECB164498970044A439 /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = "<group>"; };
+		32988ECF1645B57E0044A439 /* SMWebRequest+VCR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SMWebRequest+VCR.h"; sourceTree = "<group>"; };
+		32988ED01645B57E0044A439 /* SMWebRequest+VCR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SMWebRequest+VCR.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +164,10 @@
 				32988EB4164493E20044A439 /* VCRTests.h */,
 				32988EB5164493E20044A439 /* VCRTests.m */,
 				32988EAF164493E20044A439 /* Supporting Files */,
+				32988ECF1645B57E0044A439 /* SMWebRequest+VCR.h */,
+				32988ED01645B57E0044A439 /* SMWebRequest+VCR.m */,
+				328EBF08164CBF8C00B8FC06 /* SpecName.h */,
+				328EBF09164CBF8C00B8FC06 /* SpecName.m */,
 			);
 			path = VCRTests;
 			sourceTree = "<group>";
@@ -295,8 +304,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				32988EB6164493E20044A439 /* VCRTests.m in Sources */,
-				32988EC2164494890044A439 /* SMWebRequest.m in Sources */,
 				32988ECD164498970044A439 /* Request.m in Sources */,
+				32988ED11645B57E0044A439 /* SMWebRequest+VCR.m in Sources */,
+				328EBF0A164CBF8C00B8FC06 /* SpecName.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +473,7 @@
 				32988EBB164493E20044A439 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		32988EBC164493E20044A439 /* Build configuration list for PBXNativeTarget "VCRTests" */ = {
 			isa = XCConfigurationList;
@@ -471,6 +482,7 @@
 				32988EBE164493E20044A439 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
