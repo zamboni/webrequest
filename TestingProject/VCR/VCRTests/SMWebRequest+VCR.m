@@ -10,7 +10,7 @@
 
 @implementation SMWebRequest (VCR)
 
-+(NSString *)documentsDirectory
++(NSURL *)documentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
@@ -18,14 +18,20 @@
 - (NSString *)urlFilePath
 {
     return [[[self.class documentsDirectory] path] stringByAppendingPathComponent:[[SpecName sharedInstance] specName]];
-//    return [docDir stringByAppendingPathComponent:[[self.request URL] absoluteString]];
 }
 
 - (void)start {
     NSData *urlData = [NSData dataWithContentsOfFile:[self urlFilePath]];
-    NSLog(@"%@", [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding]);
-    
-    [self realStart];
+    if(urlData != nil)
+    {
+//        NSLog(@"%@", [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding]);
+
+        [self performSelectorInBackground:@selector(processDataInBackground:) withObject:urlData];
+    }
+    else
+    {
+        [self realStart];
+    }
 }
 
 - (void)realStart {
@@ -40,6 +46,8 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
+    [self->data writeToFile:[self urlFilePath] atomically:TRUE];
+
     [self realConnectionDidFinishLoading:conn];
 }
 
@@ -50,9 +58,7 @@
     [self retain]; // we must retain ourself before we call handlers, in case they release us!
     
     NSInteger status = [response isKindOfClass:[NSHTTPURLResponse class]] ? [(NSHTTPURLResponse *)response statusCode] : 200;
-    
-    [self->data writeToFile:[self urlFilePath] atomically:TRUE];
-    
+        
     if (conn && response && (status < 200 || (status >= 300 && status != 304))) {
         NSLog(@"Failed with HTTP status code %i while loading %@", (int)status, self);
         
