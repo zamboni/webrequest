@@ -25,6 +25,8 @@
     if(urlData != nil)
     {
 //        NSLog(@"%@", [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding]);
+        [self retain];
+        [delegate retain];
 
         [self performSelectorInBackground:@selector(processDataInBackground:) withObject:urlData];
     }
