@@ -10,30 +10,88 @@
 
 @implementation SMWebRequest (VCR)
 
-+(NSURL *)documentsDirectory
++ (NSURL *)documentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (NSString *)urlFilePath
++ (NSString *)urlFilePath
 {
-    return [[[self.class documentsDirectory] path] stringByAppendingPathComponent:[[SpecName sharedInstance] specName]];
+    return [[[self documentsDirectory] path] stringByAppendingPathComponent:[[SpecName sharedInstance] specName]];
+}
+
+- (BOOL)writeToFile
+{
+    NSInteger status            = [response isKindOfClass:[NSHTTPURLResponse class]] ? [(NSHTTPURLResponse *)response statusCode] : 200;
+    NSString *statusString      = [NSString stringWithFormat: @"%d", status];
+    NSString *key               = [NSString stringWithFormat: @"%@?%@", [request URL], [request HTTPBody]];
+    NSString *responseString    = [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding];
+    
+//    [self->data writeToFile:[self.class urlFilePath] atomically:TRUE];
+    NSData *urlData = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
+    
+    NSDictionary *cassetteDictionary;
+    
+//    if(urlData == nil)
+//    {
+//        cassetteDictionary = @{ key : @{@"code" : statusString, @"response" : self->data }};
+//    }
+//    else
+//    {
+//        NSMutableDictionary *cassetteDictionary = [NSJSONSerialization JSONObjectWithData:urlData options:0 error:nil];
+//        [cassetteDictionary setObject:@{@"code" : statusString, @"response" : self->data } forKey:key];        
+//    }
+    
+    cassetteDictionary = @{ key : @{@"code" : statusString, @"response" : responseString }};
+
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:(NSDictionary *)cassetteDictionary options:kNilOptions error:nil];
+    return [jsonData writeToFile:[self.class urlFilePath] atomically:TRUE];
+}
+
+
+
++ (NSMutableURLRequest *)createRequest:(NSString *)url:(NSDictionary *)params
+{
+    //    NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:&error];
+    NSURL *requestUrl = [NSURL URLWithString:url];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:jsonData];
+    return request;
 }
 
 - (void)start {
-    NSData *urlData = [NSData dataWithContentsOfFile:[self urlFilePath]];
+    NSData *urlData = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
     if(urlData != nil)
     {
-//        NSLog(@"%@", [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding]);
-        [self retain];
-        [delegate retain];
-
-        [self performSelectorInBackground:@selector(processDataInBackground:) withObject:urlData];
+        NSURLConnection *conn = [NSURLConnection connectionWithRequest:request delegate:self];
+        [self connectionDidFinishLoading:conn];
     }
     else
     {
         [self realStart];
     }
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)conn {
+//    NSLog(@"Finished loading data: %@", [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding]);
+    if([[NSFileManager defaultManager] fileExistsAtPath:[self.class urlFilePath]])
+    {
+        self->data = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
+    }
+    else
+    {
+        [self writeToFile];
+//        [self->data writeToFile:[self.class urlFilePath] atomically:TRUE];
+    }
+    [self realConnectionDidFinishLoading:conn];
 }
 
 - (void)realStart {
@@ -43,14 +101,8 @@
     
     //NSLog(@"Requesting %@", self);
     
-    self->data = [NSMutableData data];
-    self->connection = [NSURLConnection connectionWithRequest:request delegate:self];    
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)conn {
-    [self->data writeToFile:[self urlFilePath] atomically:TRUE];
-
-    [self realConnectionDidFinishLoading:conn];
+    self->data          = [NSMutableData data];
+    self->connection    = [NSURLConnection connectionWithRequest:request delegate:self];    
 }
 
 - (void)realConnectionDidFinishLoading:(NSURLConnection *)conn {
@@ -60,7 +112,7 @@
     [self retain]; // we must retain ourself before we call handlers, in case they release us!
     
     NSInteger status = [response isKindOfClass:[NSHTTPURLResponse class]] ? [(NSHTTPURLResponse *)response statusCode] : 200;
-        
+  
     if (conn && response && (status < 200 || (status >= 300 && status != 304))) {
         NSLog(@"Failed with HTTP status code %i while loading %@", (int)status, self);
         

@@ -9,6 +9,7 @@
 #import "VCRTests.h"
 #import "Request.h"
 #import "SpecName.h"
+#import "SMWebRequest+VCR.h"
 
 @implementation VCRTests
 
@@ -26,13 +27,55 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testCreatesAFile
+{
+    [[NSFileManager defaultManager] removeItemAtPath:[SMWebRequest urlFilePath] error:nil];
+    STAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file not created");
+
+    Request *request = [[Request alloc] init];
+    [request callRequest];
+    [self waitForCompletion:1];
+
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file created");
+}
+
+- (void)testFileHasResponseJSON
+{
+    [[NSFileManager defaultManager] removeItemAtPath:[SMWebRequest urlFilePath] error:nil];
+    STAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file not created");
+    
+    Request *request = [[Request alloc] init];
+    [request callRequest];
+    [self waitForCompletion:1];
+    
+    NSData *data            = [NSData dataWithContentsOfFile:[SMWebRequest urlFilePath]];
+    NSDictionary *response  = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"response"], @"response is nil");
+}
+
+- (void)testFileHasCodeJSON
+{
+    [[NSFileManager defaultManager] removeItemAtPath:[SMWebRequest urlFilePath] error:nil];
+    STAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file not created");
+    
+    Request *request = [[Request alloc] init];
+    [request callRequest];
+    [self waitForCompletion:1];
+    
+    NSData *data            = [NSData dataWithContentsOfFile:[SMWebRequest urlFilePath]];
+    NSDictionary *response  = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"code"], @"response is nil");
+}
+
+- (void)testXample
 {
     Request *request = [[Request alloc] init];
     [request callRequest];
-    [self waitForCompletion:5];
-//    NSLog([[NSString alloc] initWithData:[request response] encoding:NSUTF8StringEncoding]);
-    STAssertNotNil([request response], @"response is nill");
+    [self waitForCompletion:1];
+    
+    STAssertNotNil([request response], @"null response");
 }
 
 - (void)waitForCompletion:(NSTimeInterval)timeoutSecs {

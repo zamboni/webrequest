@@ -14,7 +14,7 @@
 
 - (void)callRequest
 {
-    webRequest = [SMWebRequest requestWithURL:[NSURL URLWithString:@"http://google.com"]];
+    webRequest = [SMWebRequest requestWithURL:[NSURL URLWithString:@"http://httpstatus.es/200"]];
     [webRequest addTarget:self action:@selector(printResponse:) forRequestEvents:SMWebRequestEventComplete];
     [webRequest start];
 }
