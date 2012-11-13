@@ -13,7 +13,6 @@
 @interface SMWebRequest (VCR)
 
 + (NSString *)urlFilePath;
-
 - (void)start;
 
 @end

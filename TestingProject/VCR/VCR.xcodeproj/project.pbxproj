@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		324C82A71652337700814A9D /* FileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 324C82A61652337700814A9D /* FileManager.m */; };
 		328EBF0A164CBF8C00B8FC06 /* SpecName.m in Sources */ = {isa = PBXBuildFile; fileRef = 328EBF09164CBF8C00B8FC06 /* SpecName.m */; };
 		32988E85164493E10044A439 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32988E84164493E10044A439 /* UIKit.framework */; };
 		32988E87164493E10044A439 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32988E86164493E10044A439 /* Foundation.framework */; };
@@ -41,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		324C82A51652337700814A9D /* FileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileManager.h; sourceTree = "<group>"; };
+		324C82A61652337700814A9D /* FileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileManager.m; sourceTree = "<group>"; };
 		328EBF08164CBF8C00B8FC06 /* SpecName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecName.h; sourceTree = "<group>"; };
 		328EBF09164CBF8C00B8FC06 /* SpecName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecName.m; sourceTree = "<group>"; };
 		32988E80164493E10044A439 /* VCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,6 +171,8 @@
 				32988ED01645B57E0044A439 /* SMWebRequest+VCR.m */,
 				328EBF08164CBF8C00B8FC06 /* SpecName.h */,
 				328EBF09164CBF8C00B8FC06 /* SpecName.m */,
+				324C82A51652337700814A9D /* FileManager.h */,
+				324C82A61652337700814A9D /* FileManager.m */,
 			);
 			path = VCRTests;
 			sourceTree = "<group>";
@@ -307,6 +312,7 @@
 				32988ECD164498970044A439 /* Request.m in Sources */,
 				32988ED11645B57E0044A439 /* SMWebRequest+VCR.m in Sources */,
 				328EBF0A164CBF8C00B8FC06 /* SpecName.m in Sources */,
+				324C82A71652337700814A9D /* FileManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

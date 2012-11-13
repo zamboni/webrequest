@@ -69,11 +69,44 @@
     STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"code"], @"response is nil");
 }
 
+- (void)testFileServesCode
+{
+    [[NSFileManager defaultManager] removeItemAtPath:[SMWebRequest urlFilePath] error:nil];
+    STAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file not created");
+    
+    Request *request = [[Request alloc] init];
+    [request callRequest];
+    [self waitForCompletion:1];
+    
+    [request callRequest];
+    NSData *data            = [NSData dataWithContentsOfFile:[SMWebRequest urlFilePath]];
+    NSDictionary *response  = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"code"], @"code is nil");
+    
+}
+
+- (void)testFileServesResponse
+{
+    [[NSFileManager defaultManager] removeItemAtPath:[SMWebRequest urlFilePath] error:nil];
+    STAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SMWebRequest urlFilePath]], @"file not created");
+    
+    Request *request = [[Request alloc] init];
+    [request callRequest];
+    [self waitForCompletion:1];
+    
+    [request callRequest];
+    NSData *data            = [NSData dataWithContentsOfFile:[SMWebRequest urlFilePath]];
+    NSDictionary *response  = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"response"], @"response is nil");
+
+}
+
 - (void)testXample
 {
     Request *request = [[Request alloc] init];
     [request callRequest];
-    [self waitForCompletion:1];
     
     STAssertNotNil([request response], @"null response");
 }

@@ -14,7 +14,7 @@
 
 - (void)callRequest
 {
-    webRequest = [SMWebRequest requestWithURL:[NSURL URLWithString:@"http://httpstatus.es/200"]];
+    webRequest = [SMWebRequest requestWithURL:[NSURL URLWithString:@"http://httpstat.us/200.json"]];
     [webRequest addTarget:self action:@selector(printResponse:) forRequestEvents:SMWebRequestEventComplete];
     [webRequest start];
 }
