@@ -43,7 +43,7 @@
 
 /* Begin PBXFileReference section */
 		324C82A51652337700814A9D /* FileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileManager.h; sourceTree = "<group>"; };
-		324C82A61652337700814A9D /* FileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileManager.m; sourceTree = "<group>"; };
+		324C82A61652337700814A9D /* FileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		328EBF08164CBF8C00B8FC06 /* SpecName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecName.h; sourceTree = "<group>"; };
 		328EBF09164CBF8C00B8FC06 /* SpecName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecName.m; sourceTree = "<group>"; };
 		32988E80164493E10044A439 /* VCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VCR.app; sourceTree = BUILT_PRODUCTS_DIR; };

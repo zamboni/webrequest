@@ -7,53 +7,13 @@
 //
 
 #import "SMWebRequest+VCR.h"
+#import "FileManager.h"
 
 @implementation SMWebRequest (VCR)
 
-+ (NSURL *)documentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-+ (NSString *)urlFilePath
-{
-    return [[[self documentsDirectory] path] stringByAppendingPathComponent:[[SpecName sharedInstance] specName]];
-}
-
-- (NSString *)getKey
-{
-    return [NSString stringWithFormat: @"%@?%@", [request URL], [request HTTPBody]];
-}
-
-- (BOOL)writeToFile
-{
-    NSInteger status            = [response isKindOfClass:[NSHTTPURLResponse class]] ? [(NSHTTPURLResponse *)response statusCode] : 200;
-    NSString *statusString      = [NSString stringWithFormat: @"%d", status];
-    NSString *key               = [self getKey];
-    NSString *responseString    = [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding];
-    
-//    [self->data writeToFile:[self.class urlFilePath] atomically:TRUE];
-    NSData *urlData = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
-    
-    NSDictionary *cassetteDictionary;
-    
-    if(urlData == nil)
-    {
-        cassetteDictionary = @{ key : @{@"code" : statusString, @"response" : responseString }};
-    }
-    else
-    {
-        NSMutableDictionary *cassetteDictionary = [NSJSONSerialization JSONObjectWithData:urlData options:0 error:nil];
-        [cassetteDictionary setObject:@{@"code" : statusString, @"response" : responseString } forKey:key];
-    }
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:(NSDictionary *)cassetteDictionary options:kNilOptions error:nil];
-    return [jsonData writeToFile:[self.class urlFilePath] atomically:TRUE];
-}
-
 - (void)start {
-    NSData *urlData = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
-    if(urlData != nil)
+    NSDictionary *cassetteDictionary = [FileManager cassetteForRequest:request];
+    if(cassetteDictionary != nil)
     {
         NSURLConnection *conn = [NSURLConnection connectionWithRequest:request delegate:self];
         [self connectionDidFinishLoading:conn];
@@ -64,33 +24,19 @@
     }
 }
 
-- (NSDictionary *)cassetteDictionary
-{
-    if(![[NSFileManager defaultManager] fileExistsAtPath:[self.class urlFilePath]])
-    {
-        return NULL;
-    }
-    else
-    {
-        NSData *fileContents = [NSData dataWithContentsOfFile:[self.class urlFilePath]];
-        NSDictionary *cassetteDictionary = [NSJSONSerialization JSONObjectWithData:fileContents options:0 error:nil];
-        return [cassetteDictionary objectForKey:[self getKey]];        
-    }
-}
-
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
-//    NSLog(@"Finished loading data: %@", [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding]);
-    NSDictionary *cassetteDictionary = [self cassetteDictionary];
+    NSLog(@"Finished loading data: %@", [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding]);
+    NSDictionary *cassetteDictionary = [FileManager cassetteForRequest:request];
+    
     if(cassetteDictionary)
     {
-
-        self->data = [cassetteDictionary objectForKey:@"response"];
+        self->data = [cassetteDictionary objectForKey:@"data"];
     }
     else
     {
-        [self writeToFile];
-//        [self->data writeToFile:[self.class urlFilePath] atomically:TRUE];
+        [FileManager writeToFileWithResponse:response andRequest:request andData:self->data];
     }
+    
     [self realConnectionDidFinishLoading:conn];
 }
 
