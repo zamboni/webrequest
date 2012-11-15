@@ -21,7 +21,7 @@
 
 - (void)printResponse:(NSData *)data
 {
-    response = data;
+    self.response = data;
 }
 
 @end

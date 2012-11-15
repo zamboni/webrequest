@@ -17,6 +17,7 @@
     {
         NSURLConnection *conn = [NSURLConnection connectionWithRequest:request delegate:self];
         [self connectionDidFinishLoading:conn];
+        [self setData:(NSMutableData *)[[cassetteDictionary objectForKey:@"data"] dataUsingEncoding:NSUTF8StringEncoding]];
     }
     else
     {
@@ -30,7 +31,7 @@
     
     if(cassetteDictionary)
     {
-        self->data = [cassetteDictionary objectForKey:@"data"];
+        [self setData:(NSMutableData *)[[cassetteDictionary objectForKey:@"data"] dataUsingEncoding:NSUTF8StringEncoding]];
     }
     else
     {
@@ -47,8 +48,8 @@
     
     //NSLog(@"Requesting %@", self);
     
-    self->data          = [NSMutableData data];
-    self->connection    = [NSURLConnection connectionWithRequest:request delegate:self];    
+    [self setData:[NSMutableData data]];
+    [self setConnection:[NSURLConnection connectionWithRequest:request delegate:self]];
 }
 
 - (void)realConnectionDidFinishLoading:(NSURLConnection *)conn {
@@ -88,8 +89,8 @@
             [self dispatchComplete:data];
     }
     
-    self->connection = nil;
-    self->data = nil; // don't keep this!
+    [self setConnection:nil];
+    [self setData:nil]; // don't keep this!
     [self release];
 }
 

@@ -63,16 +63,16 @@
     [request callRequest];
     [self waitForCompletion:1];
     
-    [request callRequest];
+    Request *request_new = [[Request alloc] init];
+    [request_new callRequest];
     NSData *data            = [NSData dataWithContentsOfFile:[FileManager urlFilePath]];
     NSDictionary *response  = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
     STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"code"], @"code is nil");
     STAssertNotNil([[response objectForKey:[[response allKeys] objectAtIndex:0]] objectForKey:@"data"], @"response is nil");
-
 }
 
-- (void)testXample
+- (void)testExample
 {
     Request *request = [[Request alloc] init];
     [request callRequest];
