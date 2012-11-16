@@ -12,6 +12,7 @@
 
 + (NSDictionary *)cassetteForRequest:(NSURLRequest *)request;
 + (NSString *)urlFilePath;
++ (NSString *)printData:(NSData *)data;
 + (BOOL)writeToFileWithResponse:(NSURLResponse *)response andRequest:(NSURLRequest *)request andData:(NSData *)data;
 
 @end

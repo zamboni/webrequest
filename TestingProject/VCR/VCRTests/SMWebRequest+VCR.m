@@ -15,9 +15,7 @@
     NSDictionary *cassetteDictionary = [FileManager cassetteForRequest:request];
     if(cassetteDictionary != nil)
     {
-        NSURLConnection *conn = [NSURLConnection connectionWithRequest:request delegate:self];
-        [self connectionDidFinishLoading:conn];
-        [self setData:(NSMutableData *)[[cassetteDictionary objectForKey:@"data"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [self connectionDidFinishLoading:self->connection];
     }
     else
     {
@@ -26,9 +24,8 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
-    NSLog(@"Finished loading data: %@", [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding]);
     NSDictionary *cassetteDictionary = [FileManager cassetteForRequest:request];
-    
+
     if(cassetteDictionary)
     {
         [self setData:(NSMutableData *)[[cassetteDictionary objectForKey:@"data"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -38,6 +35,7 @@
         [FileManager writeToFileWithResponse:response andRequest:request andData:self->data];
     }
     
+    NSLog(@"Finished loading data: %@", [[NSString alloc] initWithData:self->data encoding:NSUTF8StringEncoding]);
     [self realConnectionDidFinishLoading:conn];
 }
 

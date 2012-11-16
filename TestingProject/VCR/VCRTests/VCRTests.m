@@ -8,7 +8,7 @@
 
 #import "VCRTests.h"
 #import "Request.h"
-#import "SpecName.h"
+#import "SpecHelper.h"
 #import "SMWebRequest+VCR.h"
 #import "FileManager.h"
 
@@ -17,7 +17,7 @@
 - (void)setUp
 {
     [super setUp];
-    [SpecName sharedInstance].specName = [[self class] description];
+    [SpecHelper sharedInstance].SpecHelper = [[self class] description];
     [[NSFileManager defaultManager] removeItemAtPath:[FileManager urlFilePath] error:nil];
     // Set-up code here.
 }
@@ -27,15 +27,6 @@
     // Tear-down code here.
     
     [super tearDown];
-}
-
-- (void)testCreatesAFile
-{
-
-    Request *request = [[Request alloc] init];
-    [request callRequest];
-    [self waitForCompletion:1];
-
 }
 
 - (void)testFileHasCodeAndResponseJSON

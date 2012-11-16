@@ -7,7 +7,7 @@
 //
 
 #import "FileManager.h"
-#import "SpecName.h"
+#import "SpecHelper.h"
 
 @implementation FileManager
 
@@ -21,6 +21,7 @@
     {
         NSData *fileContents = [NSData dataWithContentsOfFile:[self urlFilePath]];
         NSDictionary *cassetteDictionary = [NSJSONSerialization JSONObjectWithData:fileContents options:0 error:nil];
+        NSString *key = [self.class getKey:request];
         return [cassetteDictionary objectForKey:[self.class getKey:request]];
     }
 }
@@ -29,30 +30,41 @@
 {
     NSInteger status            = [response isKindOfClass:[NSHTTPURLResponse class]] ? [(NSHTTPURLResponse *)response statusCode] : 200;
     NSString *statusString      = [NSString stringWithFormat: @"%d", status];
-    NSString *key               = [NSString stringWithFormat: @"%@:%@", [request URL], [request HTTPBody]];
+    NSString *key               = [self.class getKey:request];
     NSString *responseString    = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     //    [self->data writeToFile:[self.class urlFilePath] atomically:TRUE];
     NSData *urlData = [NSData dataWithContentsOfFile:[FileManager urlFilePath]];
     
-    NSDictionary *cassetteDictionary;
+    NSMutableDictionary *cassetteDictionary = [[NSMutableDictionary alloc] init];
     
     if(urlData == nil)
     {
-        cassetteDictionary = @{ key : @{@"code" : statusString, @"data" : responseString }};
+        cassetteDictionary = [@{ key : @{@"code" : statusString, @"data" : responseString }} mutableCopy];
     }
     else
     {
-        NSMutableDictionary *cassetteDictionary = [NSJSONSerialization JSONObjectWithData:urlData options:0 error:nil];
+        cassetteDictionary = [NSJSONSerialization JSONObjectWithData:urlData options:NSJSONReadingMutableContainers error:nil];
         [cassetteDictionary setObject:@{@"code" : statusString, @"data" : responseString } forKey:key];
     }
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:(NSDictionary *)cassetteDictionary options:kNilOptions error:nil];
-    return [jsonData writeToFile:[FileManager urlFilePath] atomically:TRUE];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:cassetteDictionary options:kNilOptions error:nil];
+    [self checkCassettesDirectory];
+    return [jsonData writeToFile:[self urlFilePath] atomically:TRUE];
+}
+
++ (void)checkCassettesDirectory
+{
+    BOOL dirExists = [[NSFileManager defaultManager] fileExistsAtPath:[self cassettesDirectory]];
+    if(!dirExists){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self cassettesDirectory] withIntermediateDirectories:NO attributes:nil error:nil];
+    }
 }
 
 + (NSString *)getKey:(NSURLRequest *)request
 {
+//    TODO: Fix this to paramerterize HTTPBody
+//    NSString *body = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
     return [NSString stringWithFormat: @"%@?%@", [request URL], [request HTTPBody]];
 }
 
@@ -61,9 +73,18 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-+ (NSString *)urlFilePath
++ (NSString *)cassettesDirectory
 {
-    return [[[self documentsDirectory] path] stringByAppendingPathComponent:[[SpecName sharedInstance] specName]];
+    return [[[self documentsDirectory] path] stringByAppendingPathComponent:@"/Cassettes"];
 }
 
++ (NSString *)urlFilePath
+{
+    return [[self cassettesDirectory] stringByAppendingPathComponent:[[SpecHelper sharedInstance] SpecHelper]];
+}
+
++ (NSString *)printData:(NSData *)data
+{
+    NSLog(@"Print data: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+}
 @end

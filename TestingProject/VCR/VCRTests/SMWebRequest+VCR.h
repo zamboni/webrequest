@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SMWebRequest.h"
-#import "SpecName.h"
+#import "SpecHelper.h"
 
 @interface SMWebRequest (VCR)
 
